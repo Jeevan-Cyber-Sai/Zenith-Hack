@@ -7,11 +7,20 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "userId required" }, { status: 400 });
   }
 
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { id: true, email: true, name: true, phone: true, school: true, createdAt: true },
+  });
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
   const stats = await prisma.studentConceptStats.findMany({
     where: { userId },
     include: {
       concept: {
         include: {
+          chapter: true,
           prerequisites: {
             include: { fromConcept: true },
           },
@@ -43,10 +52,16 @@ export async function GET(req: NextRequest) {
     return {
       id: s.conceptId,
       title: s.concept.title,
+      chapterTitle: s.concept.chapter?.title ?? null,
+      chapterOrder: s.concept.chapter?.order ?? null,
       mastery: s.masteryProbability,
       learningVelocity: s.learningVelocity,
       frustrationIndex: s.frustrationIndex,
       hintDependencyRatio: s.hintDependencyRatio,
+      eloRating: s.eloRating,
+      questionsAnswered: s.questionsAnswered,
+      correctAnswers: s.correctAnswers,
+      incorrectAnswers: s.incorrectAnswers,
       prerequisites: prereqIds,
       reinforcementNodes: reinforcementIds,
       unlocked: s.masteryProbability >= 0.2,
@@ -87,6 +102,14 @@ export async function GET(req: NextRequest) {
   };
 
   return NextResponse.json({
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      phone: user.phone,
+      school: user.school,
+      createdAt: user.createdAt,
+    },
     concepts: conceptNodes,
     errorSummary: errorLogs,
     conceptRedirectHistory,

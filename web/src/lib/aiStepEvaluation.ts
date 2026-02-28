@@ -22,6 +22,8 @@ export type StepEvaluationResult = {
     strategyHint: string;
     stepCorrection: string;
   };
+  /** Full step-by-step solution for the question */
+  completeSolution: string;
 };
 
 const client = new OpenAI({
@@ -42,6 +44,7 @@ For each response:
   1. Conceptual nudge (high-level idea, no formulas)
   2. Strategy hint (outline of the approach, still leaving work for the student)
   3. Step correction (explicit correction of the mistaken step)
+- Provide a "completeSolution" field: the full step-by-step correct solution to the question, suitable to show to the student after they submit.
 
 Respond ONLY in strict JSON with the following shape:
 {
@@ -51,7 +54,8 @@ Respond ONLY in strict JSON with the following shape:
     "conceptualNudge": string,
     "strategyHint": string,
     "stepCorrection": string
-  }
+  },
+  "completeSolution": string
 }
 `;
 
@@ -86,7 +90,9 @@ ${studentSteps}
 
   const raw = completion.output[0].content[0].text;
   const parsed = JSON.parse(raw) as StepEvaluationResult;
-
+  if (!parsed.completeSolution) {
+    parsed.completeSolution = parsed.hints?.stepCorrection ?? "See step correction above.";
+  }
   return parsed;
 }
 

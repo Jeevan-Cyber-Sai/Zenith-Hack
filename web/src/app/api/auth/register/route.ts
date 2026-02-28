@@ -1,13 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
+import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { email, name } = body as { email: string; name?: string };
+  const {
+    email,
+    password,
+    name,
+    phone,
+    school,
+  } = body as {
+    email: string;
+    password: string;
+    name?: string;
+    phone?: string;
+    school?: string;
+  };
 
   if (!email?.trim()) {
     return NextResponse.json(
       { error: "Email is required" },
+      { status: 400 }
+    );
+  }
+  if (!password || password.length < 6) {
+    return NextResponse.json(
+      { error: "Password must be at least 6 characters." },
       { status: 400 }
     );
   }
@@ -25,10 +44,15 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const hashedPassword = await hash(password, 10);
+
   const user = await prisma.user.create({
     data: {
       email: normalizedEmail,
       name: (name ?? "").trim() || null,
+      password: hashedPassword,
+      phone: (phone ?? "").trim() || null,
+      school: (school ?? "").trim() || null,
     },
   });
 
@@ -36,5 +60,7 @@ export async function POST(req: NextRequest) {
     id: user.id,
     email: user.email,
     name: user.name,
+    phone: user.phone,
+    school: user.school,
   });
 }

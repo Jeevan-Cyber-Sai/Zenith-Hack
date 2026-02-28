@@ -26,6 +26,7 @@ type ResultState = {
     strategyHint: string;
     stepCorrection: string;
   };
+  completeSolution: string;
   skillTreeDecision: { type: string; conceptId: string };
 };
 
@@ -176,19 +177,40 @@ export default function SectionPage() {
             <div
               className={`rounded-xl border p-5 ${result.isCorrect ? "border-emerald-500/50 bg-emerald-500/10" : "border-amber-500/50 bg-amber-500/10"}`}
             >
-              <p className="font-medium text-white">
+              <h3 className="text-lg font-semibold text-white">Final result</h3>
+              <p className="mt-1 font-medium text-white">
                 {result.isCorrect ? "Correct" : "Not quite right"}
               </p>
               <p className="mt-1 text-sm text-slate-300">
                 Mastery: {(result.masteryBefore * 100).toFixed(0)}% → {(result.masteryAfter * 100).toFixed(0)}%
                 {result.banditEnabled && ` · Reward: ${result.reward.toFixed(3)}`}
               </p>
-              <div className="mt-3 space-y-2 text-sm">
-                <p className="text-slate-400">Hints (for review):</p>
-                <p><span className="text-slate-500">Nudge:</span> {result.hints.conceptualNudge}</p>
-                <p><span className="text-slate-500">Strategy:</span> {result.hints.strategyHint}</p>
-                <p><span className="text-slate-500">Correction:</span> {result.hints.stepCorrection}</p>
+
+              <div className="mt-4 rounded-lg border border-slate-600 bg-slate-800/50 p-4">
+                <h4 className="mb-2 text-sm font-semibold text-slate-300">Hints for this question</h4>
+                <ul className="space-y-2 text-sm">
+                  <li>
+                    <span className="font-medium text-slate-400">1. Conceptual nudge:</span>
+                    <span className="ml-1 text-slate-200">{result.hints.conceptualNudge}</span>
+                  </li>
+                  <li>
+                    <span className="font-medium text-slate-400">2. Strategy hint:</span>
+                    <span className="ml-1 text-slate-200">{result.hints.strategyHint}</span>
+                  </li>
+                  <li>
+                    <span className="font-medium text-slate-400">3. Step correction:</span>
+                    <span className="ml-1 text-slate-200">{result.hints.stepCorrection}</span>
+                  </li>
+                </ul>
               </div>
+
+              <div className="mt-4 rounded-lg border border-indigo-500/30 bg-indigo-500/10 p-4">
+                <h4 className="mb-2 text-sm font-semibold text-indigo-200">Final solution</h4>
+                <p className="whitespace-pre-wrap text-sm text-slate-200">
+                  {result.completeSolution}
+                </p>
+              </div>
+
               <button
                 type="button"
                 onClick={fetchQuestion}

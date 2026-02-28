@@ -58,6 +58,14 @@ export default function AppLayout({
             Studemy
           </Link>
           <div className="flex items-center gap-4">
+            <Link
+              href="/app/account"
+              className="text-sm text-slate-300 hover:text-white underline-offset-2 hover:underline"
+              title="Account details"
+            >
+              Account
+            </Link>
+            <span className="text-sm text-slate-500">|</span>
             <span className="text-sm text-slate-400">{user.email}</span>
             <button
               type="button"

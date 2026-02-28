@@ -281,6 +281,7 @@ export async function POST(req: NextRequest) {
     difficulty,
     banditEnabled: mode === "ADAPTIVE",
     hints: evalResult.hints,
+    completeSolution: evalResult.completeSolution ?? evalResult.hints.stepCorrection,
     skillTreeDecision: decision,
   });
 }
