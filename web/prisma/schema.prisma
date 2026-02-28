@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String?  // hashed; optional for demo (email-only login)
+  createdAt DateTime @default(now())
+
+  conceptStats StudentConceptStats[]
+  attempts     Attempt[]
+  errorLogs    ErrorLog[]
+}
+
+model Subject {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  createdAt DateTime @default(now())
+
+  classes Class[]
+}
+
+model Class {
+  id         String   @id @default(cuid())
+  subjectId  String
+  subject    Subject  @relation(fields: [subjectId], references: [id])
+  name       String   // e.g. "12"
+  createdAt  DateTime @default(now())
+
+  @@unique([subjectId, name])
+  chapters Chapter[]
+}
+
+model Chapter {
+  id        String   @id @default(cuid())
+  classId   String
+  class     Class    @relation(fields: [classId], references: [id])
+  title     String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  concepts Concept[]
+}
+
+model Concept {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String?
+  chapterId   String?
+  chapter     Chapter? @relation(fields: [chapterId], references: [id])
+  createdAt   DateTime @default(now())
+
+  prerequisites       ConceptRelation[]   @relation("Prerequisites")
+  prerequisiteOf      ConceptRelation[]   @relation("Dependents")
+  reinforcementNodes  ReinforcementEdge[]  @relation("FromConcept")
+  reinforcementNodeFor ReinforcementEdge[] @relation("ReinforcementNode")
+
+  questions Question[]
+  stats     StudentConceptStats[]
+  attempts  Attempt[]
+  errorLogs ErrorLog[]
+}
+
+/// Self-referential relation for prerequisites and dependents
+model ConceptRelation {
+  id             String  @id @default(cuid())
+  fromConceptId  String
+  fromConcept    Concept @relation("Prerequisites", fields: [fromConceptId], references: [id])
+  toConceptId    String
+  toConcept      Concept @relation("Dependents", fields: [toConceptId], references: [id])
+
+  @@unique([fromConceptId, toConceptId])
+}
+
+/// Edge to reinforcement concepts that can be injected when progress is slow
+model ReinforcementEdge {
+  id                      String  @id @default(cuid())
+  fromConceptId            String
+  fromConcept              Concept @relation("FromConcept", fields: [fromConceptId], references: [id])
+  reinforcementConceptId   String
+  reinforcementNode        Concept @relation("ReinforcementNode", fields: [reinforcementConceptId], references: [id])
+
+  @@unique([fromConceptId, reinforcementConceptId])
+}
+
+model StudentConceptStats {
+  id                    String   @id @default(cuid())
+  user                  User     @relation(fields: [userId], references: [id])
+  userId                String
+  concept               Concept  @relation(fields: [conceptId], references: [id])
+  conceptId             String
+  eloRating             Int      @default(1200)
+  masteryProbability    Float    @default(0.0)
+  learningVelocity      Float    @default(0.0)
+  hintDependencyRatio   Float    @default(0.0)
+  frustrationIndex      Float    @default(0.0)
+  questionsAnswered     Int      @default(0)
+  correctAnswers        Int      @default(0)
+  incorrectAnswers      Int      @default(0)
+  hintsUsed             Int      @default(0)
+  redirectedCount       Int      @default(0)
+  lastUpdatedAt         DateTime @default(now())
+
+  banditStats BanditStats[]
+  attempts    Attempt[]
+}
+
+model Question {
+  id          String   @id @default(cuid())
+  concept     Concept  @relation(fields: [conceptId], references: [id])
+  conceptId   String
+  prompt      String
+  difficulty  Difficulty
+  createdAt   DateTime @default(now())
+
+  attempts Attempt[]
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+  CHALLENGE
+}
+
+model Attempt {
+  id                    String              @id @default(cuid())
+  user                  User                @relation(fields: [userId], references: [id])
+  userId                String
+  question              Question            @relation(fields: [questionId], references: [id])
+  questionId            String
+  concept               Concept             @relation(fields: [conceptId], references: [id])
+  conceptId             String
+  stats                 StudentConceptStats @relation(fields: [statsId], references: [id])
+  statsId               String
+
+  isCorrect             Boolean
+  usedHint              Boolean             @default(false)
+  mode                  PracticeMode
+  masteryBefore         Float
+  masteryAfter          Float
+  reward                Float
+  selectedDifficulty    Difficulty
+  createdAt             DateTime            @default(now())
+
+  errorLogs ErrorLog[]
+}
+
+enum PracticeMode {
+  STATIC
+  ADAPTIVE
+}
+
+model BanditStats {
+  id          String              @id @default(cuid())
+  stats       StudentConceptStats @relation(fields: [statsId], references: [id])
+  statsId     String
+  difficulty  Difficulty
+  timesSelected Int               @default(0)
+  averageReward Float             @default(0.0)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @default(now())
+
+  @@unique([statsId, difficulty])
+}
+
+enum ErrorType {
+  SIGN_ERROR
+  EXPANSION_ERROR
+  ALGEBRA_ISOLATION_ERROR
+  CONCEPTUAL_ERROR
+}
+
+model ErrorLog {
+  id          String     @id @default(cuid())
+  user        User       @relation(fields: [userId], references: [id])
+  userId      String
+  attempt     Attempt    @relation(fields: [attemptId], references: [id])
+  attemptId   String
+  concept     Concept    @relation(fields: [conceptId], references: [id])
+  conceptId   String
+  errorType   ErrorType
+  message     String?
+  createdAt   DateTime   @default(now())
+}
+
