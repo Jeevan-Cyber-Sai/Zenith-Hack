@@ -67,6 +67,18 @@ async function main() {
     { prompt: "Show that the relation R in the set A = {1, 2, 3, 4, 5, 6} given by R = {(a, b) : b = a + 1} is neither reflexive nor symmetric.", difficulty: Difficulty.HARD },
     { prompt: "Let f : R → R be defined as f(x) = 10x + 7. Find g : R → R such that g ∘ f = f ∘ g = I_R.", difficulty: Difficulty.CHALLENGE },
     { prompt: "Let f : N → N be defined by f(n) = n + 1. Is f onto? Is f one-one?", difficulty: Difficulty.CHALLENGE },
+    { prompt: "Determine whether the relation R on N given by R = {(a, b) : a - b is a multiple of 3} is an equivalence relation.", difficulty: Difficulty.MEDIUM },
+    { prompt: "On the set Z of integers, examine whether the relation R = {(a, b) : a · b ≥ 0} is reflexive, symmetric and transitive.", difficulty: Difficulty.MEDIUM },
+    { prompt: "Let A = {1, 2, 3, 4}. Write all equivalence classes of the relation R defined by a R b if and only if a and b have the same parity.", difficulty: Difficulty.MEDIUM },
+    { prompt: "Prove that the relation R on R given by a R b ⇔ a − b ∈ Z is an equivalence relation. Describe the equivalence class of 1/2.", difficulty: Difficulty.HARD },
+    { prompt: "Let f : R → R be defined by f(x) = 2x + 3. Show that f is one-one and onto, and hence find f⁻¹.", difficulty: Difficulty.MEDIUM },
+    { prompt: "Let f : R → R be defined by f(x) = x² + 1. Is f invertible on R? If not, restrict its domain suitably so that it becomes invertible and find its inverse on that domain.", difficulty: Difficulty.HARD },
+    { prompt: "Given f : R → R, f(x) = x³, verify whether f is one-one and onto. What can you say about f⁻¹?", difficulty: Difficulty.EASY },
+    { prompt: "Find the composition (g ∘ f)(x) and (f ∘ g)(x) where f(x) = x² and g(x) = x + 1. Are they equal?", difficulty: Difficulty.EASY },
+    { prompt: "Let f : R → R be defined as f(x) = 3x − 4 and g : R → R be defined as g(x) = x/3 + 4/3. Show that g is the inverse of f.", difficulty: Difficulty.MEDIUM },
+    { prompt: "If f : R → R is defined by f(x) = x³ and g : R → R is defined by g(x) = ∛x, verify that g ∘ f = f ∘ g = I_R.", difficulty: Difficulty.MEDIUM },
+    { prompt: "Give an example of a relation on the set of students in your class that is symmetric but not transitive, and explain why.", difficulty: Difficulty.EASY },
+    { prompt: "Give an example of a real-life function that is not one-one but is onto, and justify your answer.", difficulty: Difficulty.EASY },
   ]);
 
   // ——— Chapter 2: Linear Equations and Matrices ———
@@ -90,6 +102,11 @@ async function main() {
     { prompt: "Solve for x: (x + 1)/2 = (x - 3)/4", difficulty: Difficulty.HARD },
     { prompt: "Solve for x: 4x + 7 = 3x - 5", difficulty: Difficulty.CHALLENGE },
     { prompt: "Solve for x: 2(3x - 1) - 3(2x + 1) = 5", difficulty: Difficulty.CHALLENGE },
+    { prompt: "Solve for x: 7x - 9 = 5x + 3", difficulty: Difficulty.EASY },
+    { prompt: "Solve for x: 2(2x + 5) - (x - 1) = 9", difficulty: Difficulty.MEDIUM },
+    { prompt: "Solve for x: (3x - 4)/5 - (x + 1)/2 = 1", difficulty: Difficulty.MEDIUM },
+    { prompt: "Solve for x: 4 - 3(2x - 1) = 2x + 5", difficulty: Difficulty.HARD },
+    { prompt: "A number is such that 5 times the number increased by 7 is 32. Form the equation and find the number.", difficulty: Difficulty.EASY },
   ]);
 
   const systemsEq = await prisma.concept.upsert({
@@ -110,6 +127,11 @@ async function main() {
     { prompt: "Solve: x/2 + y/3 = 2, 2x - y = 5", difficulty: Difficulty.HARD },
     { prompt: "Solve: 2x + 3y = 13, 5x - 4y = -2", difficulty: Difficulty.HARD },
     { prompt: "Solve: (x+y)/2 + (x-y)/3 = 4, (x+y)/3 + (x-y)/2 = 1", difficulty: Difficulty.CHALLENGE },
+    { prompt: "Solve the system: x + 2y = 4, 3x - y = 5", difficulty: Difficulty.EASY },
+    { prompt: "Solve the system: 2x - 3y = 7, 4x + y = 1", difficulty: Difficulty.MEDIUM },
+    { prompt: "Solve the system: 3x + 4y = 10, 5x - 2y = 4", difficulty: Difficulty.MEDIUM },
+    { prompt: "Solve: x + y + z = 6, x − y + z = 2, 2x + y − z = 3", difficulty: Difficulty.HARD },
+    { prompt: "Solve, if possible: x + y = 2, 2x + 2y = 5. Comment on the nature of the system.", difficulty: Difficulty.MEDIUM },
   ]);
 
   try {
@@ -141,6 +163,18 @@ async function main() {
     { prompt: "Find the value of cos(sin⁻¹(3/5) + cos⁻¹(12/13)).", difficulty: Difficulty.HARD },
     { prompt: "Solve: 2 tan⁻¹(cos x) = tan⁻¹(2 cosec x).", difficulty: Difficulty.CHALLENGE },
     { prompt: "Prove: tan⁻¹(1/4) + tan⁻¹(2/9) = (1/2) cos⁻¹(3/5).", difficulty: Difficulty.CHALLENGE },
+    { prompt: "Find the principal value of sin⁻¹(−√3/2).", difficulty: Difficulty.EASY },
+    { prompt: "Find the principal value of cos⁻¹(−1/2).", difficulty: Difficulty.EASY },
+    { prompt: "Express sin⁻¹(x) − cos⁻¹(x) in terms of x.", difficulty: Difficulty.MEDIUM },
+    { prompt: "Find the value of tan(sin⁻¹(3/5)).", difficulty: Difficulty.MEDIUM },
+    { prompt: "Show that tan⁻¹ x + tan⁻¹(1/x) = π/2 for x > 0.", difficulty: Difficulty.MEDIUM },
+    { prompt: "Prove that sin⁻¹ x + sin⁻¹ y = sin⁻¹(x√(1−y²) + y√(1−x²)) for suitable x and y.", difficulty: Difficulty.HARD },
+    { prompt: "If tan⁻¹ a + tan⁻¹ b = π/4, show that a + b = 1 − ab.", difficulty: Difficulty.HARD },
+    { prompt: "Simplify: 2 sin⁻¹ x = sin⁻¹(2x√(1−x²)).", difficulty: Difficulty.MEDIUM },
+    { prompt: "Solve for x: cos⁻¹(2x² − 1) = 2 cos⁻¹ x.", difficulty: Difficulty.HARD },
+    { prompt: "Solve the equation: tan⁻¹(2x) − tan⁻¹(1 − x) = π/4.", difficulty: Difficulty.CHALLENGE },
+    { prompt: "If cos⁻¹ x + cos⁻¹ y = π/3, show that x² + y² + xy = 3/4.", difficulty: Difficulty.CHALLENGE },
+    { prompt: "Graphically interpret the principal values of sin⁻¹ x and cos⁻¹ x on the same axes.", difficulty: Difficulty.EASY },
   ]);
 
   // ——— Chapter 4: Matrices ———
@@ -164,6 +198,18 @@ async function main() {
     { prompt: "If A and B are symmetric matrices of the same order, show that AB is symmetric iff AB = BA.", difficulty: Difficulty.HARD },
     { prompt: "If A = [cos θ -sin θ; sin θ cos θ], verify that A'A = I and find A⁻¹.", difficulty: Difficulty.CHALLENGE },
     { prompt: "Express the matrix A = [3 2; 4 1] as the sum of a symmetric and a skew-symmetric matrix.", difficulty: Difficulty.CHALLENGE },
+    { prompt: "Write the zero matrix and identity matrix of order 2. State their orders.", difficulty: Difficulty.EASY },
+    { prompt: "If A = [2 −1; 0 3] and B = [1 4; 2 −2], find A + B and 2A − B.", difficulty: Difficulty.EASY },
+    { prompt: "For matrices A (of order m×n) and B (of order n×p), what is the order of AB? Give an example.", difficulty: Difficulty.MEDIUM },
+    { prompt: "If A = [1 2; 0 1], show that Aⁿ = [1 2n; 0 1] for any positive integer n.", difficulty: Difficulty.HARD },
+    { prompt: "Verify that (AB)' = B'A' for suitable 2×2 matrices A and B of your choice.", difficulty: Difficulty.MEDIUM },
+    { prompt: "If A = [1 2 3; 0 1 4; 0 0 1], find |A| and comment on the type of matrix A.", difficulty: Difficulty.MEDIUM },
+    { prompt: "Show that the determinant of a triangular matrix is the product of its diagonal elements using an example.", difficulty: Difficulty.MEDIUM },
+    { prompt: "Solve the system: x + y + z = 6, 2x − y + 3z = 14, 3x + 4y − 2z = 2 using matrices.", difficulty: Difficulty.HARD },
+    { prompt: "If A is a 2×2 matrix such that A² = O (zero matrix) but A ≠ O, give an example and verify.", difficulty: Difficulty.HARD },
+    { prompt: "Show by an example that matrix multiplication is not commutative, i.e. AB ≠ BA in general.", difficulty: Difficulty.EASY },
+    { prompt: "If A = [a b; c d] with ad − bc ≠ 0, write the formula for A⁻¹ and verify it for A = [1 2; 3 5].", difficulty: Difficulty.MEDIUM },
+    { prompt: "Explain geometrically what multiplying a vector by a rotation matrix A = [cos θ −sin θ; sin θ cos θ] does in the plane.", difficulty: Difficulty.EASY },
   ]);
 
   // ——— Chapter 5: Continuity and Differentiability ———
@@ -187,6 +233,18 @@ async function main() {
     { prompt: "If x = a(θ - sin θ), y = a(1 - cos θ), find d²y/dx².", difficulty: Difficulty.HARD },
     { prompt: "If y = tan⁻¹((√(1+x²)-1)/x), find dy/dx.", difficulty: Difficulty.CHALLENGE },
     { prompt: "If y = e^(ax) sin(bx), prove that d²y/dx² - 2a(dy/dx) + (a²+b²)y = 0.", difficulty: Difficulty.CHALLENGE },
+    { prompt: "Check the continuity of f(x) = { x², x ≠ 1; 3, x = 1 } at x = 1.", difficulty: Difficulty.EASY },
+    { prompt: "Using first principles, find the derivative of f(x) = x².", difficulty: Difficulty.MEDIUM },
+    { prompt: "If f(x) = |x − 3|, discuss its differentiability at x = 3.", difficulty: Difficulty.MEDIUM },
+    { prompt: "If y = e^x cos x, find dy/dx and d²y/dx².", difficulty: Difficulty.MEDIUM },
+    { prompt: "If y = log(x² + 1), find dy/dx.", difficulty: Difficulty.EASY },
+    { prompt: "Verify Rolle's Theorem for f(x) = x² − 4x + 3 on [1, 3].", difficulty: Difficulty.HARD },
+    { prompt: "If y = tan⁻¹(√(1−x²)/x), find dy/dx.", difficulty: Difficulty.HARD },
+    { prompt: "If y = sin⁻¹(2x/ (1 + x²)), show that dy/dx = 2/(1 + x²).", difficulty: Difficulty.CHALLENGE },
+    { prompt: "Find the derivative of f(x) = x^x for x > 0.", difficulty: Difficulty.CHALLENGE },
+    { prompt: "If f and g are differentiable functions, write the product rule for (fg)' and illustrate it with an example.", difficulty: Difficulty.EASY },
+    { prompt: "State and prove the chain rule for composite functions with a simple example.", difficulty: Difficulty.MEDIUM },
+    { prompt: "Discuss the continuity and differentiability of f(x) = { x², x ≤ 1; 2x − 1, x > 1 } at x = 1.", difficulty: Difficulty.HARD },
   ]);
 
   console.log("Seed done. Demo user id:", user.id);

@@ -33,7 +33,8 @@ const client = new OpenAI({
 const hasOpenAiKey = Boolean(process.env.OPENAI_API_KEY);
 
 const systemPrompt = `
-You are an AI tutor evaluating step-by-step math solutions.
+You are an AI tutor inside the STUDEMY app, a gamified Class 12 Mathematics learning platform that uses XP, streaks, adaptive practice and chapter/section based questions.
+Your main goal is to help the student genuinely understand the mathematics while fitting naturally into this app experience.
 
 For each response:
 - Determine whether the student's overall solution is logically correct.
@@ -47,6 +48,7 @@ For each response:
   2. Strategy hint (outline of the approach, still leaving work for the student)
   3. Step correction (explicit correction of the mistaken step)
 - Provide a "completeSolution" field: the full step-by-step correct solution to the question, suitable to show to the student after they submit.
+- You may optionally add 1 short, motivational sentence in any hint or in the completeSolution that references the STUDEMY app (XP, streaks, chapters, sections, or mastery) but do NOT change the JSON shape or add extra fields.
 
 Respond ONLY in strict JSON with the following shape:
 {
@@ -136,11 +138,14 @@ export type QuestionHintsResult = {
 };
 
 const hintsOnlySystemPrompt = `
-You are an AI math tutor. Given a math question, provide:
+You are an AI math tutor inside the STUDEMY app, a gamified Class 12 Mathematics platform where students earn XP, maintain streaks, and practice chapter-wise questions with an adaptive engine.
+Given a math question from this app, provide:
 1. conceptualNudge: A high-level idea or nudge (no formulas, just the concept).
 2. strategyHint: Outline of the approach the student could take.
 3. stepCorrection: A more direct hint pointing to the next step.
 4. completeSolution: The full step-by-step correct solution to the question.
+
+You may occasionally include a very short, encouraging reference to the STUDEMY experience (XP, streaks, mastery, quests, or chapters) inside the text of a hint or solution, but you must not change the JSON keys or add extra fields.
 
 Respond ONLY in strict JSON:
 {

@@ -148,14 +148,57 @@ export default function HeroSection() {
         </div>
 
         <div className="flex-1 animate-float">
-          <Image
-            src="/hero-illustration.png"
-            alt="Students learning together with gamified elements"
-            width={600}
-            height={600}
-            className="w-full max-w-xl rounded-3xl"
-            priority
-          />
+          <div className="relative w-full max-w-xl">
+            <Image
+              src="/hero-illustration.png"
+              alt="Students learning together with gamified elements"
+              width={600}
+              height={600}
+              className="w-full rounded-3xl shadow-2xl"
+              priority
+            />
+
+            {/* Floating preview of the in-app experience */}
+            <div className="pointer-events-auto absolute -bottom-6 left-4 right-4 mx-auto max-w-md rounded-2xl border border-slate-800/80 bg-slate-950/80 p-4 shadow-xl backdrop-blur-md animate-slide-up">
+              <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
+                <span className="inline-flex items-center gap-1 font-semibold text-slate-100">
+                  <Swords className="h-3 w-3 text-streak" />
+                  Live Quest · Class 12 Maths
+                </span>
+                <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                  +10 XP per correct step
+                </span>
+              </div>
+              <div className="mb-3 rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-left">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  AI Tutor Chat
+                </p>
+                <p className="mt-1 text-sm text-slate-100">
+                  You're solving a question from{" "}
+                  <span className="font-semibold text-primary">
+                    Continuity & Differentiability
+                  </span>
+                  . Explain your steps and I&apos;ll nudge you whenever you slip.
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 text-xs">
+                <div className="inline-flex max-w-[80%] items-start gap-2 rounded-2xl bg-slate-800/80 px-3 py-2 text-slate-100">
+                  <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
+                  <p>
+                    Tip: focus on the definition of continuity at x = a, then
+                    check left and right limits step by step.
+                  </p>
+                </div>
+                <div className="ml-auto inline-flex max-w-[80%] items-start gap-2 rounded-2xl bg-primary/20 px-3 py-2 text-primary-foreground">
+                  <span className="mt-1 h-2 w-2 rounded-full bg-primary" />
+                  <p>
+                    Got it! I&apos;ll write my solution like a proper board
+                    exam answer.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
