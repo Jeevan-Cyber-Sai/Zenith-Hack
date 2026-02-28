@@ -44,21 +44,28 @@ export default function AppLayout({
 
   if (!checked || !user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950 text-white">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--background)] text-[var(--foreground)]">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-indigo-500 border-t-transparent" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <header className="sticky top-0 z-20 border-b border-slate-800 bg-slate-900/95 backdrop-blur">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+      <header className="sticky top-0 z-20 border-b border-slate-800 bg-slate-900/80 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
           <Link href="/app" className="text-xl font-semibold text-white">
             Studemy
           </Link>
           <div className="flex items-center gap-4">
             <ThemeToggle />
+            <Link
+              href="/app/discuss"
+              className="text-sm text-slate-300 hover:text-white underline-offset-2 hover:underline"
+              title="Discuss with other students"
+            >
+              Discuss
+            </Link>
             <Link
               href="/app/account"
               className="text-sm text-slate-300 hover:text-white underline-offset-2 hover:underline"

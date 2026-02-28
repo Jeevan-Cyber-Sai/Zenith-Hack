@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 const NOVA_INTRO = `Hi! I'm **Nova**, your Studemy assistant.
 
@@ -26,6 +26,17 @@ const FAQ: { q: string; a: string }[] = [
 
 export default function NovaChatbot() {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+
+  const filteredFaq = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return FAQ;
+    return FAQ.filter(
+      (item) =>
+        item.q.toLowerCase().includes(q) ||
+        item.a.toLowerCase().includes(q)
+    );
+  }, [query]);
 
   return (
     <>
@@ -51,6 +62,19 @@ export default function NovaChatbot() {
             </button>
           </div>
           <div className="max-h-[60vh] overflow-y-auto p-4 text-sm text-slate-200">
+            <div className="mb-3">
+              <label className="mb-1 block text-xs font-medium text-slate-400">
+                Search about Studemy
+              </label>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="e.g. mastery, ELO, skill tree…"
+                className="w-full rounded-md border border-slate-600 bg-slate-900 px-3 py-1.5 text-xs text-slate-100 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              />
+            </div>
+
             <div className="whitespace-pre-wrap leading-relaxed">
               {NOVA_INTRO.split("**").map((part, i) =>
                 i % 2 === 1 ? <strong key={i} className="text-white">{part}</strong> : part
@@ -58,12 +82,18 @@ export default function NovaChatbot() {
             </div>
             <div className="mt-4 space-y-3 border-t border-slate-700 pt-4">
               <p className="font-medium text-slate-300">Quick answers</p>
-              {FAQ.map((item, i) => (
-                <div key={i} className="rounded-lg bg-slate-800/80 p-3">
-                  <p className="font-medium text-indigo-200">{item.q}</p>
-                  <p className="mt-1 text-slate-300">{item.a}</p>
-                </div>
-              ))}
+              {filteredFaq.length === 0 ? (
+                <p className="text-slate-400">
+                  No matches found. Try another keyword like &quot;XP&quot;, &quot;ELO&quot;, or &quot;skill tree&quot;.
+                </p>
+              ) : (
+                filteredFaq.map((item, i) => (
+                  <div key={i} className="rounded-lg bg-slate-800/80 p-3">
+                    <p className="font-medium text-indigo-200">{item.q}</p>
+                    <p className="mt-1 text-slate-300">{item.a}</p>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

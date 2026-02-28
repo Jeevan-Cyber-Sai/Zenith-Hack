@@ -127,11 +127,20 @@ export default function SectionPage() {
           mode,
         }),
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? "Submission failed");
+
+      let data: any = null;
+      try {
+        data = await res.json();
+      } catch {
+        setError("Unexpected server response. Please try again.");
         return;
       }
+
+      if (!res.ok) {
+        setError(data?.error ?? "Submission failed");
+        return;
+      }
+
       setResult(data);
       if (data.xpTotal != null) updateUserXp(data.xpTotal);
     } finally {

@@ -196,3 +196,13 @@ model ErrorLog {
   createdAt   DateTime   @default(now())
 }
 
+model DiscussionMessage {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  concept   Concept? @relation(fields: [conceptId], references: [id])
+  conceptId String?
+  content   String
+  createdAt DateTime @default(now())
+}
+
