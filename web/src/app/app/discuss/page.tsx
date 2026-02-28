@@ -21,6 +21,7 @@ export default function DiscussPage() {
   const [sending, setSending] = useState(false);
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const raw = localStorage.getItem("studemy_user");
@@ -31,6 +32,10 @@ export default function DiscussPage() {
         setUser(null);
       }
     }
+  }, []);
+
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
   const loadMessages = () => {
@@ -148,10 +153,12 @@ export default function DiscussPage() {
                   <div className="flex items-center justify-between text-xs text-slate-400">
                     <span>{m.user.name || m.user.email}</span>
                     <span>
-                      {new Date(m.createdAt).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {mounted
+                        ? new Date(m.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : "\u00a0"}
                     </span>
                   </div>
                   <p className="mt-1 text-slate-100 whitespace-pre-wrap">
