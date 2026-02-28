@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, email: true, name: true, phone: true, school: true, createdAt: true },
+    select: { id: true, email: true, name: true, phone: true, school: true, xp: true, createdAt: true },
   });
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -108,6 +108,7 @@ export async function GET(req: NextRequest) {
       name: user.name,
       phone: user.phone,
       school: user.school,
+      xp: user.xp ?? 0,
       createdAt: user.createdAt,
     },
     concepts: conceptNodes,

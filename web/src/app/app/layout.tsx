@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import ThemeToggle from "@/components/ThemeToggle";
 
 type User = { id: string; email: string; name?: string } | null;
 
@@ -12,7 +13,6 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const pathname = usePathname();
   const [user, setUser] = useState<User>(null);
   const [checked, setChecked] = useState(false);
 
@@ -58,6 +58,7 @@ export default function AppLayout({
             Studemy
           </Link>
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             <Link
               href="/app/account"
               className="text-sm text-slate-300 hover:text-white underline-offset-2 hover:underline"

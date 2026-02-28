@@ -78,14 +78,13 @@ ${studentSteps}
     input: [
       {
         role: "system",
-        content: systemPrompt,
+        content: systemPrompt + "\nRespond with only valid JSON, no other text.",
       },
       {
         role: "user",
         content: userPrompt,
       },
     ],
-    response_format: { type: "json_object" },
   });
 
   const raw = completion.output[0].content[0].text;
@@ -94,6 +93,43 @@ ${studentSteps}
     parsed.completeSolution = parsed.hints?.stepCorrection ?? "See step correction above.";
   }
   return parsed;
+}
+
+/** Generate hints and full solution for a question (no student answer). Used for pre-submit reveal. */
+export type QuestionHintsResult = {
+  conceptualNudge: string;
+  strategyHint: string;
+  stepCorrection: string;
+  completeSolution: string;
+};
+
+const hintsOnlySystemPrompt = `
+You are an AI math tutor. Given a math question, provide:
+1. conceptualNudge: A high-level idea or nudge (no formulas, just the concept).
+2. strategyHint: Outline of the approach the student could take.
+3. stepCorrection: A more direct hint pointing to the next step.
+4. completeSolution: The full step-by-step correct solution to the question.
+
+Respond ONLY in strict JSON:
+{
+  "conceptualNudge": string,
+  "strategyHint": string,
+  "stepCorrection": string,
+  "completeSolution": string
+}
+`;
+
+export async function generateQuestionHints(questionPrompt: string): Promise<QuestionHintsResult> {
+  const completion = await client.responses.create({
+    model: "gpt-4.1-mini",
+    reasoning: { effort: "low" },
+    input: [
+      { role: "system", content: hintsOnlySystemPrompt + "\nRespond with only valid JSON, no other text." },
+      { role: "user", content: `Question:\n${questionPrompt}` },
+    ],
+  });
+  const raw = completion.output[0].content[0].text;
+  return JSON.parse(raw) as QuestionHintsResult;
 }
 
 export function hintRewardMultiplier(options: {

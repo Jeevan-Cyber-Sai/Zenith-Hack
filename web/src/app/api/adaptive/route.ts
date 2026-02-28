@@ -187,9 +187,17 @@ export async function POST(req: NextRequest) {
       masteryBefore,
       masteryAfter,
       reward,
-      selectedDifficulty: difficulty,
+      selectedDifficulty: chosenQuestion.difficulty,
     },
   });
+
+  // Gamification: +10 XP for correct answer
+  if (isCorrect) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { xp: { increment: 10 } },
+    });
+  }
 
   if (evalResult.errorType && evalResult.errorType !== "none") {
     await prisma.errorLog.create({
@@ -227,7 +235,7 @@ export async function POST(req: NextRequest) {
       where: {
         statsId_difficulty: {
           statsId: updatedStats.id,
-          difficulty,
+          difficulty: chosenQuestion.difficulty,
         },
       },
       data: {
@@ -236,11 +244,11 @@ export async function POST(req: NextRequest) {
         },
         averageReward:
           (reward +
-            updatedStats.banditStats.find((b) => b.difficulty === difficulty)!
+            updatedStats.banditStats.find((b) => b.difficulty === chosenQuestion.difficulty)!
               .averageReward *
-              (updatedStats.banditStats.find((b) => b.difficulty === difficulty)!
+              (updatedStats.banditStats.find((b) => b.difficulty === chosenQuestion.difficulty)!
                 .timesSelected || 0)) /
-          ((updatedStats.banditStats.find((b) => b.difficulty === difficulty)!
+          ((updatedStats.banditStats.find((b) => b.difficulty === chosenQuestion.difficulty)!
             .timesSelected || 0) +
             1),
         updatedAt: new Date(),
@@ -273,17 +281,22 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  const xpEarned = isCorrect ? 10 : 0;
+  const xpTotal = (user.xp ?? 0) + xpEarned;
+
   return NextResponse.json({
     attemptId: attempt.id,
     isCorrect,
     masteryBefore,
     masteryAfter,
     reward,
-    difficulty,
+    difficulty: chosenQuestion.difficulty,
     banditEnabled: mode === "ADAPTIVE",
     hints: evalResult.hints,
     completeSolution: evalResult.completeSolution ?? evalResult.hints.stepCorrection,
     skillTreeDecision: decision,
+    xpEarned,
+    xpTotal,
   });
 }
 

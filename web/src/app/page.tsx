@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Home() {
   const router = useRouter();
@@ -69,20 +70,24 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
+    <div className="relative min-h-screen overflow-hidden bg-[var(--background)] text-[var(--foreground)]">
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/80 via-slate-950 to-violet-950/80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/80 via-slate-950 to-violet-950/80 opacity-90 dark:opacity-100" />
         <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-indigo-500/20 blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 h-80 w-80 rounded-full bg-violet-500/20 blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
         <div className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/10 blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#33415522_1px,transparent_1px),linear-gradient(to_bottom,#33415522_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
+      <div className="absolute right-4 top-4 z-20">
+        <ThemeToggle />
+      </div>
+
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 py-12">
-        <h1 className="mb-2 text-5xl font-bold tracking-tight text-white drop-shadow-lg sm:text-6xl md:text-7xl">
+        <h1 className="mb-2 text-5xl font-bold tracking-tight drop-shadow-lg sm:text-6xl md:text-7xl text-[var(--foreground)]">
           Studemy
         </h1>
-        <p className="mb-12 text-slate-400">
+        <p className="mb-12 text-slate-500 dark:text-slate-400">
           Adaptive learning for Class 12 Mathematics
         </p>
 

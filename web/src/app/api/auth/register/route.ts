@@ -62,5 +62,6 @@ export async function POST(req: NextRequest) {
     name: user.name,
     phone: user.phone,
     school: user.school,
+    xp: user.xp ?? 0,
   });
 }
