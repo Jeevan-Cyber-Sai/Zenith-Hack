@@ -31,7 +31,7 @@ export default function AppLayout({
   useEffect(() => {
     if (!checked) return;
     if (!user) {
-      router.replace("/");
+      router.replace("/login");
       return;
     }
   }, [checked, user, router]);
@@ -39,7 +39,7 @@ export default function AppLayout({
   const handleLogout = () => {
     localStorage.removeItem("studemy_user");
     setUser(null);
-    router.replace("/");
+    router.replace("/login");
   };
 
   if (!checked || !user) {
