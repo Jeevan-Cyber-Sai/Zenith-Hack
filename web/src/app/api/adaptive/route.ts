@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
 
   let difficulty: Difficulty;
   let selectedQuestionId: string;
-  let question: { id: string; prompt: string; difficulty: Difficulty };
+  let question: { id: string; prompt: string; difficulty: Difficulty } | undefined;
 
   // If client sent a questionId (e.g. from GET /api/app/practice/next), use that question.
   if (questionId) {
@@ -90,12 +90,10 @@ export async function POST(req: NextRequest) {
       question = existing;
       selectedQuestionId = existing.id;
       difficulty = existing.difficulty;
-    } else {
-      questionId = null; // invalid id; pick question below
     }
   }
 
-  if (!questionId) {
+  if (!question) {
     if (mode === "STATIC") {
       difficulty = Difficulty.MEDIUM;
     } else {
@@ -146,8 +144,9 @@ export async function POST(req: NextRequest) {
     selectedQuestionId = question.id;
   }
 
+  const chosenQuestion = question ?? questionsForConcept[0];
   const evalResult = await evaluateStudentSteps({
-    questionPrompt: question.prompt,
+    questionPrompt: chosenQuestion.prompt,
     studentSteps,
   });
 
@@ -179,7 +178,7 @@ export async function POST(req: NextRequest) {
   const attempt = await prisma.attempt.create({
     data: {
       userId: user.id,
-      questionId: selectedQuestionId,
+      questionId: chosenQuestion.id,
       conceptId: concept.id,
       statsId: stats.id,
       isCorrect,
