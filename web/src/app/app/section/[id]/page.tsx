@@ -42,6 +42,7 @@ export default function SectionPage() {
   const [error, setError] = useState("");
   const [revealed, setRevealed] = useState<{ hint1?: string; hint2?: string; hint3?: string; solution?: string }>({});
   const [revealing, setRevealing] = useState<string | null>(null);
+  const [xpBanner, setXpBanner] = useState<{ amount: number; total?: number } | null>(null);
 
   const updateUserXp = useCallback((xp: number) => {
     setUser((u) => (u ? { ...u, xp } : null));
@@ -128,21 +129,30 @@ export default function SectionPage() {
         }),
       });
 
+      const raw = await res.text();
       let data: any = null;
       try {
-        data = await res.json();
+        data = raw ? JSON.parse(raw) : null;
       } catch {
-        setError("Unexpected server response. Please try again.");
+        setError(
+          `Server error (${res.status}). Please check the dev console for /api/adaptive details.`
+        );
         return;
       }
 
       if (!res.ok) {
-        setError(data?.error ?? "Submission failed");
+        setError(data?.error ?? `Submission failed (status ${res.status})`);
         return;
       }
 
       setResult(data);
       if (data.xpTotal != null) updateUserXp(data.xpTotal);
+      if (data.xpEarned && data.xpEarned > 0) {
+        setXpBanner({ amount: data.xpEarned, total: data.xpTotal });
+        setTimeout(() => {
+          setXpBanner(null);
+        }, 4000);
+      }
     } finally {
       setSubmitting(false);
     }
@@ -154,6 +164,25 @@ export default function SectionPage() {
 
   return (
     <div className="space-y-6">
+      {xpBanner && (
+        <div className="flex items-center justify-between rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-100 animate-slide-up">
+          <p>
+            +{xpBanner.amount} XP earned for this question!{" "}
+            {typeof xpBanner.total === "number" && (
+              <span className="text-emerald-200">
+                Total XP: {xpBanner.total.toLocaleString()}
+              </span>
+            )}
+          </p>
+          <button
+            type="button"
+            onClick={() => setXpBanner(null)}
+            className="ml-3 text-xs text-emerald-200 hover:text-emerald-100"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
       <div className="flex items-center gap-4">
         <Link href="/app" className="text-slate-400 hover:text-white">
           ← Back to chapters

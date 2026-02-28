@@ -301,10 +301,11 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     console.error("Error in /api/adaptive:", err);
+    const message =
+      err instanceof Error ? err.message : "Unknown server error in /api/adaptive";
     return NextResponse.json(
       {
-        error:
-          "Something went wrong while checking your answer. Please try again in a moment.",
+        error: `Adaptive engine error: ${message}`,
       },
       { status: 500 }
     );
