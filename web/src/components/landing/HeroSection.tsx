@@ -74,21 +74,20 @@ export default function HeroSection() {
         />
       </div>
 
-      <div className="container mx-auto flex flex-col items-center gap-8 lg:flex-row lg:gap-12">
-        <div className="flex flex-1 flex-col items-center text-center lg:items-start lg:text-left">
+      <div className="container mx-auto flex flex-col items-center gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+        <div className="flex flex-1 flex-col items-center text-center lg:items-center lg:text-center">
           <h1 className="mb-4 text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
             <span className="gradient-text">STUDEMY</span>
           </h1>
           <p className="mb-2 text-xl font-semibold text-foreground md:text-2xl">
             Learn. Play. Level Up. 🚀
           </p>
-          <p className="mb-8 max-w-lg text-lg text-muted-foreground">
+          <p className="mb-8 max-w-xl text-lg text-muted-foreground">
             An interactive adaptive learning platform that makes studying feel
-            like a game. Earn XP, unlock achievements, and climb the
-            leaderboard!
+            like a game. Earn XP, unlock achievements, and climb the leaderboard!
           </p>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-3">
             <Link href="/login">
               <Button
                 size="lg"
@@ -111,7 +110,7 @@ export default function HeroSection() {
           </div>
 
           <div
-            className="mt-6 flex flex-wrap gap-2 animate-slide-up opacity-0"
+            className="mt-6 flex flex-wrap items-center justify-center gap-2 animate-slide-up opacity-0"
             style={{ animationDelay: "0.3s" }}
           >
             <span className="xp-badge text-xs">
@@ -147,57 +146,17 @@ export default function HeroSection() {
           </div>
         </div>
 
-        <div className="flex-1 animate-float">
+        <div className="flex flex-1 items-center justify-center animate-float">
           <div className="relative w-full max-w-xl">
+            <div className="pointer-events-none absolute inset-0 -z-10 rounded-[2.5rem] bg-gradient-to-tr from-primary/30 via-accent/20 to-secondary/30 blur-2xl animate-glow" />
             <Image
-              src="/hero-illustration.png"
-              alt="Students learning together with gamified elements"
-              width={600}
-              height={600}
-              className="w-full rounded-3xl shadow-2xl"
+              src="/studemy-hero.png"
+              alt="Students learning together in the Studemy gamified interface"
+              width={1024}
+              height={572}
               priority
+              className="w-full rounded-[2.5rem] border border-white/10 shadow-2xl transition-transform duration-500 hover:scale-[1.03]"
             />
-
-            {/* Floating preview of the in-app experience */}
-            <div className="pointer-events-auto absolute -bottom-6 left-4 right-4 mx-auto max-w-md rounded-2xl border border-slate-800/80 bg-slate-950/80 p-4 shadow-xl backdrop-blur-md animate-slide-up">
-              <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
-                <span className="inline-flex items-center gap-1 font-semibold text-slate-100">
-                  <Swords className="h-3 w-3 text-streak" />
-                  Live Quest · Class 12 Maths
-                </span>
-                <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
-                  +10 XP per correct step
-                </span>
-              </div>
-              <div className="mb-3 rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-left">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                  AI Tutor Chat
-                </p>
-                <p className="mt-1 text-sm text-slate-100">
-                  You're solving a question from{" "}
-                  <span className="font-semibold text-primary">
-                    Continuity & Differentiability
-                  </span>
-                  . Explain your steps and I&apos;ll nudge you whenever you slip.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 text-xs">
-                <div className="inline-flex max-w-[80%] items-start gap-2 rounded-2xl bg-slate-800/80 px-3 py-2 text-slate-100">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
-                  <p>
-                    Tip: focus on the definition of continuity at x = a, then
-                    check left and right limits step by step.
-                  </p>
-                </div>
-                <div className="ml-auto inline-flex max-w-[80%] items-start gap-2 rounded-2xl bg-primary/20 px-3 py-2 text-primary-foreground">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-primary" />
-                  <p>
-                    Got it! I&apos;ll write my solution like a proper board
-                    exam answer.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

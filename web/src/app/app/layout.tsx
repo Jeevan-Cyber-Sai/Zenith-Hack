@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -17,7 +17,8 @@ export default function AppLayout({
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    const raw = typeof window !== "undefined" ? localStorage.getItem("studemy_user") : null;
+    const raw =
+      typeof window !== "undefined" ? localStorage.getItem("studemy_user") : null;
     if (raw) {
       try {
         setUser(JSON.parse(raw));
@@ -32,7 +33,6 @@ export default function AppLayout({
     if (!checked) return;
     if (!user) {
       router.replace("/login");
-      return;
     }
   }, [checked, user, router]);
 
@@ -41,6 +41,20 @@ export default function AppLayout({
     setUser(null);
     router.replace("/login");
   };
+
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 17) return "Good Afternoon";
+    return "Good Evening";
+  }, []);
+
+  const displayName = useMemo(() => {
+    if (!user) return "Learner";
+    if (user.name && user.name.trim().length > 0) return user.name;
+    const localPart = user.email.split("@")[0];
+    return localPart || "Learner";
+  }, [user]);
 
   if (!checked || !user) {
     return (
@@ -85,7 +99,23 @@ export default function AppLayout({
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-4 py-6">{children}</main>
+      <main className="mx-auto max-w-6xl px-4 py-6">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+          <p className="text-sm font-semibold text-white">
+            {greeting} {displayName}
+          </p>
+          <div className="flex items-center gap-2 text-xs text-slate-300">
+            <span className="inline-flex items-center gap-1 rounded-full bg-slate-800 px-3 py-1 font-medium">
+              <span className="h-2 w-2 rounded-full bg-emerald-400" />
+              Notifications
+            </span>
+            <span className="text-slate-400">
+              You're all caught up for now.
+            </span>
+          </div>
+        </div>
+        {children}
+      </main>
     </div>
   );
 }
