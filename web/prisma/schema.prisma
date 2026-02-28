@@ -20,6 +20,7 @@ model User {
   conceptStats StudentConceptStats[]
   attempts     Attempt[]
   errorLogs    ErrorLog[]
+  discussionMessages DiscussionMessage[]
 }
 
 model Subject {
@@ -71,6 +72,7 @@ model Concept {
   stats     StudentConceptStats[]
   attempts  Attempt[]
   errorLogs ErrorLog[]
+  discussionMessages DiscussionMessage[]
 }
 
 /// Self-referential relation for prerequisites and dependents
