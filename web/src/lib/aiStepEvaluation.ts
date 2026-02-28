@@ -72,22 +72,16 @@ Student solution (step-by-step):
 ${studentSteps}
 `;
 
-  const completion = await client.responses.create({
-    model: "gpt-4.1-mini",
-    reasoning: { effort: "medium" },
-    input: [
-      {
-        role: "system",
-        content: systemPrompt + "\nRespond with only valid JSON, no other text.",
-      },
-      {
-        role: "user",
-        content: userPrompt,
-      },
+  const completion = await client.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: systemPrompt + "\nRespond with only valid JSON, no other text." },
+      { role: "user", content: userPrompt },
     ],
+    response_format: { type: "json_object" },
   });
 
-  const raw = completion.output[0].content[0].text;
+  const raw = completion.choices[0]?.message?.content ?? "{}";
   const parsed = JSON.parse(raw) as StepEvaluationResult;
   if (!parsed.completeSolution) {
     parsed.completeSolution = parsed.hints?.stepCorrection ?? "See step correction above.";
@@ -120,15 +114,15 @@ Respond ONLY in strict JSON:
 `;
 
 export async function generateQuestionHints(questionPrompt: string): Promise<QuestionHintsResult> {
-  const completion = await client.responses.create({
-    model: "gpt-4.1-mini",
-    reasoning: { effort: "low" },
-    input: [
+  const completion = await client.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
       { role: "system", content: hintsOnlySystemPrompt + "\nRespond with only valid JSON, no other text." },
       { role: "user", content: `Question:\n${questionPrompt}` },
     ],
+    response_format: { type: "json_object" },
   });
-  const raw = completion.output[0].content[0].text;
+  const raw = completion.choices[0]?.message?.content ?? "{}";
   return JSON.parse(raw) as QuestionHintsResult;
 }
 
