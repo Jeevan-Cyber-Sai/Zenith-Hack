@@ -13,10 +13,11 @@
     "db:seed": "node ./scripts/seed.cjs"
   },
   "dependencies": {
-    "@prisma/client": "^6.1.0",
+    "@prisma/client": "^5.22.0",
     "bcryptjs": "^2.4.3",
     "next": "16.1.6",
     "openai": "^4.73.0",
+    "prisma": "^5.22.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "zod": "^3.23.8"
@@ -29,7 +30,6 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
-    "prisma": "^6.1.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
