@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   const {
     userId,
     conceptId,
-    questionId,
+    questionId: clientQuestionId,
     studentSteps,
     usedHint,
     mode,
@@ -28,6 +28,8 @@ export async function POST(req: NextRequest) {
     usedHint: boolean;
     mode: Mode;
   } = body;
+
+  let questionId = clientQuestionId;
 
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) {
@@ -89,7 +91,7 @@ export async function POST(req: NextRequest) {
       selectedQuestionId = existing.id;
       difficulty = existing.difficulty;
     } else {
-      questionId = null;
+      questionId = null; // invalid id; pick question below
     }
   }
 
