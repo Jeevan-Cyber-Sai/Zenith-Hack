@@ -55,10 +55,16 @@ export async function POST(req: NextRequest) {
       hintCache.set(questionId, hints);
     } catch (e) {
       console.error(e);
-      return NextResponse.json(
-        { error: "Failed to generate hints" },
-        { status: 500 }
-      );
+      hints = {
+        conceptualNudge:
+          "Think about the main concept and what the question is asking.",
+        strategyHint:
+          "Identify what is given and what you need to find; then outline the steps.",
+        stepCorrection:
+          "Check each step for algebra or sign errors and that you answered the question.",
+        completeSolution:
+          "Review the question and your steps. Use your notes or textbook for a full solution.",
+      };
     }
   }
 
@@ -69,10 +75,10 @@ export async function POST(req: NextRequest) {
   });
 
   let content: string;
-  if (type === "hint1") content = hints.conceptualNudge;
-  else if (type === "hint2") content = hints.strategyHint;
-  else if (type === "hint3") content = hints.stepCorrection;
-  else content = hints.completeSolution;
+  if (type === "hint1") content = hints.conceptualNudge?.trim() || "Consider the main idea behind the question.";
+  else if (type === "hint2") content = hints.strategyHint?.trim() || "Plan the steps from given information to the answer.";
+  else if (type === "hint3") content = hints.stepCorrection?.trim() || "Recheck your last step and the required formula.";
+  else content = hints.completeSolution?.trim() || "Use your textbook or notes for the full solution.";
 
   return NextResponse.json({
     content,

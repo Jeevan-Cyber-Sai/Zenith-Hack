@@ -315,18 +315,36 @@ export default function SectionPage() {
           {result && (
             <div
               className={`rounded-xl border p-5 ${result.isCorrect ? "border-emerald-500/50 bg-emerald-500/10" : "border-amber-500/50 bg-amber-500/10"}`}
+              data-result-block="true"
             >
               <h3 className="text-lg font-semibold text-white">Final result</h3>
               <p className="mt-1 font-medium text-white">
                 {result.isCorrect ? "Correct" : "Not quite right"}
               </p>
-              <p className="mt-1 text-sm text-slate-300">
-                Mastery: {(result.masteryBefore * 100).toFixed(0)}% → {(result.masteryAfter * 100).toFixed(0)}%
-                {result.banditEnabled && ` · Reward: ${result.reward.toFixed(3)}`}
-                {result.xpEarned != null && result.xpEarned > 0 && (
-                  <span className="ml-1 text-amber-200">+{result.xpEarned} XP</span>
+              <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-slate-300">
+                <span>
+                  Mastery (ELO): {(result.masteryBefore * 100).toFixed(0)}% → <strong className="text-white">{(result.masteryAfter * 100).toFixed(0)}%</strong>
+                </span>
+                <span className="text-amber-200">
+                  XP: {xp} {result.xpEarned != null && result.xpEarned > 0 && (
+                    <>(+{result.xpEarned} this question)</>
+                  )}
+                </span>
+                {result.banditEnabled && (
+                  <span>Reward: {result.reward.toFixed(3)}</span>
                 )}
-              </p>
+              </div>
+              <div className="mt-4 rounded-lg border border-slate-600 bg-slate-800/60 p-4">
+                <h4 className="mb-2 text-sm font-semibold text-white">Explanation & hints</h4>
+                <ul className="space-y-1.5 text-sm text-slate-300">
+                  <li><span className="text-slate-400">Concept:</span> {result.hints.conceptualNudge}</li>
+                  <li><span className="text-slate-400">Strategy:</span> {result.hints.strategyHint}</li>
+                  <li><span className="text-slate-400">Step check:</span> {result.hints.stepCorrection}</li>
+                </ul>
+                <p className="mt-3 border-t border-slate-600 pt-3 text-sm text-slate-200">
+                  <span className="text-slate-400">Full solution / explanation:</span> {result.completeSolution}
+                </p>
+              </div>
               <button
                 type="button"
                 onClick={fetchQuestion}
